@@ -4,6 +4,7 @@
 
 ;; Author: Sebastian Wiesner <lunaryorn@gmail.com>
 ;; Maintainer: Johan Andersson <johan.rejeep@gmail.com>
+;; Version: 0.0.1
 ;; Keywords: convenience
 ;; URL: http://github.com/cask/epl
 
