@@ -96,8 +96,6 @@ Parse the package metadata of BUFFER and return a corresponding
 
 ;;;; Package system management
 
-(defvar epl--load-path-before-initialize)
-
 (defun epl-reset ()
   "Reset the package system.
 
