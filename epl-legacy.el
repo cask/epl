@@ -28,6 +28,9 @@
 
 ;;; Code:
 
+(require 'epl-util)
+
+
 ;;;; Compatibility check
 
 (unless (require 'package nil :no-error)

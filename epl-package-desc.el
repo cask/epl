@@ -28,8 +28,10 @@
 
 ;;; Code:
 
-;;;; Compatibility check
+(require 'epl-util)
 
+
+;;;; Compatibility check
 (unless (require 'package nil :no-error)
   ;; Try to require package.el to check its API version
   (epl-error "Library package.el missing"))
