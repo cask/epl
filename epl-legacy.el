@@ -29,17 +29,10 @@
 ;;; Code:
 
 (require 'epl-util)
+(require 'epl-common)
 
 
 ;;;; Compatibility check
-
-(eval-and-compile
-  (unless (require 'package nil :no-error)
-    ;; Load the legacy package.el from Emacs 23.  We don't need to specify the
-    ;; full path here, because the package directory is conveniently added to
-    ;; `load-path'
-    (load "package-legacy")))
-
 (when (fboundp 'package-desc-create)
   ;; The package-desc structure is present, hence indicate that this API cannot
   ;; be loaded

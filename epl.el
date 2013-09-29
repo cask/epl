@@ -97,77 +97,6 @@
 ;; implementation, and hence defined in the top-level library.
 
 
-;;;; Package.el cruft
-
-(setq package-archives nil)             ; Clear the default list of archives to
-                                        ; let the user have exact control over
-                                        ; all archives
-
-
-;;;; Package objects
-
-(defun epl-requirement-version-string (requirement)
-  "The version of a REQUIREMENT, as string."
-  (package-version-join (epl-requirement-version requirement)))
-
-(defun epl-package-version-string (package)
-  "Get the version from a PACKAGE, as string."
-  (package-version-join (epl-package-version package)))
-
-(defun epl-package-installed-p (package)
-  "Determine whether a PACKAGE is installed.
-
-PACKAGE is either a package name as symbol, or a package object."
-  (let ((name (if (epl-package-p package)
-                  (epl-package-name package)
-                package))
-        (version (when (epl-package-p package)
-                   (epl-package-version package))))
-    (package-installed-p name version)))
-
-(defun epl-package-from-file (file-name)
-  "Parse the package headers the file at FILE-NAME.
-
-Return an `epl-package' object with the header metadata."
-  (with-temp-buffer
-    (insert-file-contents file-name)
-    (epl-package-from-buffer (current-buffer))))
-
-
-;;;; Package directory
-(defun epl-package-dir ()
-  "Get the directory of packages."
-  package-user-dir)
-
-(defun epl-default-package-dir ()
-  "Get the default directory of packages."
-  (eval (car (get 'package-user-dir 'standard-value))))
-
-(defun epl-change-package-dir (directory)
-  "Change the directory of packages to DIRECTORY."
-  (setq package-user-dir directory)
-  (epl-initialize))
-
-
-;;;; Package system management
-
-(defvar epl--load-path-before-initialize nil
-  "Remember the load path for `epl-reset'.")
-
-(defun epl-initialize (&optional no-activate)
-  "Load Emacs Lisp packages and activate them.
-
-With NO-ACTIVATE non-nil, do not activate packages."
-  (setq epl--load-path-before-initialize load-path)
-  (package-initialize no-activate))
-
-(defalias 'epl-refresh 'package-refresh-contents)
-
-(defun epl-add-archive (name url)
-  "Add a package archive with NAME and URL."
-  (add-to-list 'package-archives (cons name url)))
-
-
 ;;;; Package database access
 (defun epl-find-upgrades (&optional packages)
   "Find all upgradable PACKAGES.

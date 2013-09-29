@@ -6,7 +6,7 @@ PKGDIR := $(shell EMACS=$(EMACS) $(CASK) package-directory)
 # Export the used EMACS to recipe environments
 export EMACS
 
-SRCS = epl.el epl-util.el \
+SRCS = epl.el epl-util.el epl-common.el \
 	epl-legacy.el epl-package-desc.el \
 	package-legacy.el
 OBJECTS = $(SRCS:.el=.elc)
@@ -21,9 +21,9 @@ clean:
 # Setup file dependencies
 epl.elc: epl-util.elc epl-legacy.elc epl-package-desc.elc
 
-epl-legacy.elc: epl-util.elc package-legacy.elc
+epl-legacy.elc: epl-util.elc epl-common.elc package-legacy.elc
 
-epl-package-desc.elc: epl-util.elc
+epl-package-desc.elc: epl-util.elc epl-common.elc
 
 %.elc : %.el
 	$(CASK) exec $(EMACS) -Q --batch -L . -f batch-byte-compile $<

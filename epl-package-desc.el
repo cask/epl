@@ -29,11 +29,10 @@
 ;;; Code:
 
 (require 'epl-util)
+(require 'epl-common)
 
 
 ;;;; Compatibility check
-(require 'package)
-
 (unless (fboundp 'package-desc-create)
   ;; The package-desc structure is missing, hence indicate that this API cannot
   ;; be loaded
