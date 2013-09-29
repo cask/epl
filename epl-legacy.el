@@ -28,12 +28,11 @@
 
 ;;; Code:
 
+(require 'epl-util)
+(require 'epl-common)
+
+
 ;;;; Compatibility check
-
-(unless (require 'package nil :no-error)
-  ;; Load the legacy package.el from Emacs 23
-  (require 'package (expand-file-name "package-legacy" epl-directory)))
-
 (when (fboundp 'package-desc-create)
   ;; The package-desc structure is present, hence indicate that this API cannot
   ;; be loaded
@@ -101,8 +100,6 @@ Parse the package metadata of BUFFER and return a corresponding
 
 
 ;;;; Package system management
-
-(defvar epl--load-path-before-initialize)
 
 (defun epl-reset ()
   "Reset the package system.
