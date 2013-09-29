@@ -1,16 +1,22 @@
 EMACS ?= emacs
 CASK ?= cask
-COMPILE = ${CASK} exec ${EMACS} -Q -batch -f batch-byte-compile
 
-all: test
+PKGDIR := $(shell EMACS=$(EMACS) $(CASK) package-directory)
 
-compile:
-	${COMPILE} epl.el
-	${COMPILE} epl-legacy.el
-	${COMPILE} epl-desc.el
-	${MAKE} clean-elc
+# Export the used EMACS to recipe environments
+export EMACS
 
-clean-elc:
-	rm -f epl.elc epl-legacy.elc epl-desc.elc
+SRCS = epl.el \
+	epl-legacy.el epl-package-desc.el \
+	package-legacy.el
+OBJECTS = $(SRCS:.el=.elc)
 
-.PHONY:	compile
+.PHONY: compile
+compile: $(OBJECTS)
+
+.PHONY: clean
+clean:
+	rm -rf $(OBJECTS)
+
+%.elc : %.el
+	$(CASK) exec $(EMACS) -Q --batch -L . -f batch-byte-compile $<
