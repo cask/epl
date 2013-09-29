@@ -88,22 +88,10 @@
 ;;;; Load implementation
 
 (eval-and-compile
-  (defconst epl-directory
-    (file-name-directory
-     (cond
-      (load-in-progress load-file-name)
-      ((and (boundp 'byte-compile-current-file) byte-compile-current-file)
-       byte-compile-current-file)
-      (:else (buffer-file-name))))
-    "Directory EPL is installed to.")
-
   (condition-case nil
-      (require 'epl-package-desc
-               (expand-file-name "epl-package-desc" epl-directory))
-    (epl-error
-     (require 'epl-legacy
-              (expand-file-name "epl-legacy" epl-directory)))))
-
+      (require 'epl-package-desc)
+    (error
+     (require 'epl-legacy))))
 
 ;; The following function definitions are independent from the concrete
 ;; implementation, and hence defined in the top-level library.

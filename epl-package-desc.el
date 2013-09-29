@@ -32,9 +32,7 @@
 
 
 ;;;; Compatibility check
-(unless (require 'package nil :no-error)
-  ;; Try to require package.el to check its API version
-  (epl-error "Library package.el missing"))
+(require 'package)
 
 (unless (fboundp 'package-desc-create)
   ;; The package-desc structure is missing, hence indicate that this API cannot
