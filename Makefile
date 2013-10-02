@@ -8,8 +8,7 @@ export EMACS
 
 # Keep these files sorted alphabetically, to compile them in the same order as
 # package.el would do
-SRCS = epl.el epl-common.el epl-legacy.el epl-package-desc.el epl-util.el \
-	package-legacy.el
+SRCS = epl.el package-legacy.el
 OBJECTS = $(SRCS:.el=.elc)
 
 .PHONY: compile
