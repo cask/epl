@@ -389,13 +389,21 @@ PACKAGE is a `epl-package' object to delete."
   ;; package-delete allows for packages being trashed instead of fully deleted.
   ;; Let's prevent his silly behavior
   (let ((delete-by-moving-to-trash nil))
+    ;; The byte compiler will warn us that we are calling `package-delete' with
+    ;; the wrong number of arguments, since it can't infer that we guarantee to
+    ;; always call the correct version.  Thus we suppress all warnings when
+    ;; calling `package-delete'.  I wish there was a more granular way to
+    ;; disable just that specific warning, but it is what it is.
     (if (epl-package--package-desc-p package)
-        (package-delete (epl-package-description package))
+        (with-no-warnings
+          (package-delete (epl-package-description package)))
       ;; The legacy API deletes by name (as string!) and version instead by
       ;; descriptor.  Hence `package-delete' takes two arguments.  For some
       ;; insane reason, the arguments are strings here!
-      (package-delete (symbol-name (epl-package-name package))
-                      (epl-package-version-string package)))))
+      (let ((name (symbol-name (epl-package-name package)))
+            (version (epl-package-version-string package)))
+        (with-no-warnings
+          (package-delete name version))))))
 
 (defun epl-upgrade (&optional packages preserve-obsolete)
   "Upgrade PACKAGES.
