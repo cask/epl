@@ -1,5 +1,5 @@
-EMACS ?= emacs
-CASK ?= cask
+EMACS = emacs
+CASK = cask
 
 PKGDIR := $(shell EMACS=$(EMACS) $(CASK) package-directory)
 
