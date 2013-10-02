@@ -63,7 +63,7 @@
 ;; `epl-add-archive' adds a new package archive.
 
 ;; `epl-installed-packages' and `epl-available-packages' get all packages
-;; installed and available for installed respectively.
+;; installed and available for installation respectively.
 
 ;; `epl-find-installed-package' and `epl-find-available-packages' find installed
 ;; and available packages by name.
@@ -75,10 +75,6 @@
 ;; `epl-package-delete' deletes a package.
 
 ;; `epl-upgrade' upgrades packages.
-
-;; This version of the EPL library requires a recent package.el which provides
-;; the `package-desc' struct.  Loading it with a legacy package.el signals an
-;; error.
 
 ;;; Code:
 
