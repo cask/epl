@@ -176,6 +176,8 @@ VAR is a symbol, bound to an `epl-package' object.  This macro
 casts this object to the `description' object, and binds the
 description to VAR in BODY."
   (declare (indent 1))
+  (unless (symbolp var)
+    (signal 'wrong-type-argument (list #'symbolp var)))
   `(let ((,var (epl-package-description ,var)))
      ,@body))
 
