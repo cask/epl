@@ -428,7 +428,7 @@ Return a list of all performed upgrades, as a list of
 `epl-upgrade' objects."
   (let ((upgrades (epl-find-upgrades packages)))
     (dolist (upgrade upgrades)
-      (epl-package-install (epl-upgrade-available upgrade))
+      (epl-package-install (epl-upgrade-available upgrade) 'force)
       (unless preserve-obsolete
         (epl-package-delete (epl-upgrade-installed upgrade))))
     upgrades))
