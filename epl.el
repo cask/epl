@@ -86,6 +86,13 @@
                                         ; let the user have exact control over
                                         ; all archives
 
+(defun epl--package-desc-p (package)
+  "Whether PACKAGE is a `package-desc' object.
+
+Like `package-desc-p', but return nil, if `package-desc-p' is not
+defined as function."
+  (and (fbound 'package-desc-p) (package-desc-p package)))
+
 
 ;;;; Package directory
 (defun epl-package-dir ()
@@ -185,8 +192,7 @@ description to VAR in BODY."
 
 (defun epl-package--package-desc-p (package)
   "Whether the description of PACKAGE is a `package-desc'."
-  (epl-package-as-description package
-    (and (fboundp 'package-desc-p) (package-desc-p package))))
+  (epl--package-desc-p (epl-package-description package)))
 
 (defun epl-package-version (package)
   "Get the version of PACKAGE, as version list."
@@ -244,7 +250,7 @@ variants."
 BUFFER defaults to the current buffer."
   (let ((info (with-current-buffer (or buffer (current-buffer))
                 (package-buffer-info))))
-    (if (epl-package--package-desc-p info)
+    (if (epl--package-desc-p info)
         (epl-package--from-package-desc info)
       ;; For legacy package.el, info is a vector [NAME REQUIRES DESCRIPTION
       ;; VERSION COMMENTARY].  We need to re-shape this vector into the
