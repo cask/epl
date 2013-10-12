@@ -178,8 +178,10 @@ description to VAR in BODY."
   (declare (indent 1))
   (unless (symbolp var)
     (signal 'wrong-type-argument (list #'symbolp var)))
-  `(let ((,var (epl-package-description ,var)))
-     ,@body))
+  `(if (epl-package-p ,var)
+       (let ((,var (epl-package-description ,var)))
+         ,@body)
+     (signal 'wrong-type-argument (list #'epl-package-p ,var))))
 
 (defun epl-package--package-desc-p (package)
   "Whether the description of PACKAGE is a `package-desc'."
