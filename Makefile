@@ -16,3 +16,10 @@ compile: $(SRCS)
 .PHONY: clean
 clean:
 	rm -rf $(OBJECTS)
+
+.PHONY: test
+test: clean
+	$(CASK) exec ert-runner
+	$(MAKE) compile
+	$(CASK) exec ert-runner
+	$(MAKE) clean
