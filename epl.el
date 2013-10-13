@@ -91,7 +91,7 @@
 
 Like `package-desc-p', but return nil, if `package-desc-p' is not
 defined as function."
-  (and (fbound 'package-desc-p) (package-desc-p package)))
+  (and (fboundp 'package-desc-p) (package-desc-p package)))
 
 
 ;;;; Package directory
