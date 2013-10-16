@@ -275,8 +275,11 @@ PACKAGE, or nil, if PACKAGE is not installed."
 
 PACKAGE-DESC is a `package-desc' object, from recent package.el
 variants."
-  (epl-package-create :name (package-desc-name package-desc)
-                      :description package-desc))
+  (if (and (fboundp 'package-desc-name)
+           (epl--package-desc-p package-desc))
+      (epl-package-create :name (package-desc-name package-desc)
+                          :description package-desc)
+    (signal 'wrong-type-argument (list 'epl--package-desc-p package-desc))))
 
 (defun epl-package--parse-info (info)
   "Parse a package.el INFO."
@@ -358,7 +361,8 @@ typically ends with -pkg.el."
     (let ((sexp (read (current-buffer))))
       (unless (eq (car sexp) 'define-package)
         (error "%S is no valid package descriptor" descriptor-file))
-      (if (fboundp 'package-desc-from-define)
+      (if (and (fboundp 'package-desc-from-define)
+               (fboundp 'package-desc-name))
           ;; In Emacs snapshot, we can conveniently call a function to parse the
           ;; descriptor
           (let ((desc (apply #'package-desc-from-define (cdr sexp))))
