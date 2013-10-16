@@ -33,20 +33,15 @@
 
 ;; The following functions comprise the public interface of this library:
 
-;; `epl-package-p' determines whether an object is a package object.
+;;; Package directory selection
 
-;; `epl-package-name' gets the package name from a package object.
+;; `epl-package-dir' gets the directory of packages.
 
-;; `epl-package-summary' gets the package summary from a package object.
+;; `epl-default-package-dir' gets the default package directory.
 
-;; `epl-package-version' gets the package version from a package object.
+;; `epl-change-package-dir' changes the directory of packages.
 
-;; `epl-package-version-string' gets the package version as string from a
-;; package object.
-
-;; `epl-package-requirements' gets the requirements of a package.
-
-;; `epl-package-installed-p' determines whether a package is installed.
+;;; Package system management
 
 ;; `epl-initialize' initializes the package system and activates all
 ;; packages.
@@ -55,13 +50,34 @@
 
 ;; `epl-refresh' refreshes all package archives.
 
-;; `epl-package-dir' gets the directory of packages.
-
-;; `epl-default-package-dir' gets the default package directory.
-
-;; `epl-change-package-dir' changes the directory of packages.
-
 ;; `epl-add-archive' adds a new package archive.
+
+;;; Package objects
+
+;; Struct `epl-requirement' describes a requirement of a package with `name' and
+;; `version' slots.
+
+;; `epl-requirement-version-string' gets a requirement version as string.
+
+;; Struct `epl-package' describes an installed or installable package with a
+;; `name' and some internal `description'.
+
+;; `epl-package-version' gets the version of a package.
+
+;; `epl-package-version-string' gets the version of a package as string.
+
+;; `epl-package-summary' gets the summary of a package.
+
+;; `epl-package-requirements' gets the requirements of a package.
+
+;; `epl-package-from-buffer' creates a package object for the package contained
+;; in the current buffer.
+
+;; `epl-package-from-file' creates a package object for a package file.
+
+;;; Package database access
+
+;; `epl-package-installed-p' determines whether a package is installed.
 
 ;; `epl-installed-packages' and `epl-available-packages' get all packages
 ;; installed and available for installation respectively.
@@ -70,6 +86,8 @@
 ;; and available packages by name.
 
 ;; `epl-find-upgrades' finds all upgradable packages.
+
+;;; Package operations
 
 ;; `epl-package-install' installs a package.
 
