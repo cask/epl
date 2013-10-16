@@ -33,9 +33,11 @@
 (require 'f)
 (require 'epl)
 
-
 (defconst epl-test-directory (f-parent (f-this-file))
   "Directory of the EPL test suite.")
+
+(defconst epl-test-resource-directory (f-join epl-test-directory "resources")
+  "Directory of resources for the EPL testsuite.")
 
 (defconst epl-test-source-directory (f-parent epl-test-directory)
   "Source directory of EPL.")
@@ -45,5 +47,12 @@
   (cl-assert (f-same? source (f-join epl-test-source-directory "epl.elc")) nil
              "ERROR: EPL not loaded from byte-compiled source, but from %s! \
 Please run make compile" source))
+
+
+;;;; Utilities
+
+(defun epl-test-resource-file-name (resource)
+  "Get the file name of a RESOURCE."
+  (f-join epl-test-resource-directory resource))
 
 ;;; test-helper.el ends here

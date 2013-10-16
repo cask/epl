@@ -56,4 +56,68 @@
     (should (eq predicate #'epl-package-p))
     (should (equal value "bar"))))
 
+(ert-deftest epl-package-from-file-lisp ()
+  (let* ((file (epl-test-resource-file-name "dummy-package.el"))
+         (package (epl-package-from-file file)))
+    (should (epl-package-p package))
+    (should (string= (epl-package-name package) 'dummy-package))
+    (should (string= (epl-package-summary package)
+                     "EPL: Dummy package for unit tests"))
+    (should (equal (epl-package-version package) '(4 3 1 2 -3)))
+    (should (equal (epl-package-requirements package)
+                   (list (epl-requirement-create :name 'foo :version '(1 2))
+                         (epl-requirement-create :name 'bar :version '(2 2)))))))
+
+(ert-deftest epl-package-from-file-tar-no-package-descriptor ()
+  "Test a TAR package without package descriptor."
+  (should-error
+   (epl-package-from-file
+    (epl-test-resource-file-name "dummy-package-4.3.1.2alpha.tar"))))
+
+(ert-deftest epl-package-from-file-tar ()
+  (let* ((file (epl-test-resource-file-name "dummy-package-4.3.2.tar"))
+         (package (epl-package-from-file file)))
+    (should (epl-package-p package))
+    (should (string= (epl-package-name package) 'dummy-package))
+    (should (string= (epl-package-summary package) "EPL dummy package"))
+    (should (equal (epl-package-version package) '(4 3 2)))
+    (should (equal (epl-package-requirements package)
+                   (list (epl-requirement-create :name 'foo :version '(0 3))
+                         (epl-requirement-create :name 'spam :version '(0 4)))))))
+
+(ert-deftest epl-package-from-file-tar-non-existing ()
+  (should-error
+   (epl-package-from-file
+    (epl-test-resource-file-name "no-such-package.tar"))))
+
+(ert-deftest epl-package-from-file-lisp-non-existing ()
+  (should-error
+   (epl-package-from-file
+    (epl-test-resource-file-name "no-such-package.el"))))
+
+(ert-deftest epl-package-from-descriptor-file ()
+  (let* ((file (epl-test-resource-file-name "dummy-package-pkg.el"))
+         (package (epl-package-from-descriptor-file file)))
+    ;; Make sure that loading a package descriptor has no side effects on the
+    ;; database. package.el tends to have such unfortunate side effects.
+    (should-not (assq 'dummy-package package-alist))
+    (should (epl-package-p package))
+    (should (string= (epl-package-name package) 'dummy-package))
+    (should (string= (epl-package-summary package)
+                     "EPL dummy package"))
+    (should (equal (epl-package-version package) '(4 3 6)))
+    (should (equal (epl-package-requirements package)
+                   (list (epl-requirement-create :name 'bar :version '(8 1 -3))
+                         (epl-requirement-create :name 'spam :version '(0 4)))))))
+
+(ert-deftest epl-package-from-descriptor-file-nonexisting ()
+  (should-error
+   (epl-package-from-file
+    (epl-test-resource-file-name "no-such-descriptor-pkg.el"))))
+
+(ert-deftest epl-package-from-descriptor-file-invalid ()
+  (should-error
+   (epl-package-from-file
+    (epl-test-resource-file-name "invalid-package-pkg.el"))))
+
 ;;; package-structures-test.el ends here
