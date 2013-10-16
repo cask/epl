@@ -24,7 +24,7 @@
 apt-get update -qq -yy
 
 # Install basic tools
-apt-get install -qq -y curl unzip python-software-properties
+apt-get install -qq -y make curl unzip python-software-properties
 
 # Add the Emacs PPA
 add-apt-repository -y ppa:cassou/emacs
