@@ -301,6 +301,43 @@ Return an `epl-package' object with the header metadata."
     (insert-file-contents file-name)
     (epl-package-from-buffer (current-buffer))))
 
+(defun epl-package--parse-descriptor-requirement (requirement)
+  "Parse a REQUIREMENT in a package descriptor."
+  ;; This function is only called on legacy package.el.  On package-desc
+  ;; package.el, we just let package.el do the work.
+  (cl-destructuring-bind (name version-string) requirement
+    (list name (version-to-list version-string))))
+
+(defun epl-package-from-descriptor-file (descriptor-file)
+  "Load a `epl-package' from a package DESCRIPTOR-FILE.
+
+A package descriptor is a file defining a new package.  Its name
+typically ends with -pkg.el."
+  (with-temp-buffer
+    (insert-file-contents descriptor-file)
+    (goto-char (point-min))
+    (let ((sexp (read (current-buffer))))
+      (unless (eq (car sexp) 'define-package)
+        (error "%S is no valid package descriptor" descriptor-file))
+      (if (fboundp 'package-desc-from-define)
+          ;; In Emacs snapshot, we can conveniently call a function to parse the
+          ;; descriptor
+          (let ((desc (apply #'package-desc-from-define (cdr sexp))))
+            (epl-package-create :name (package-desc-name desc)
+                                :description desc))
+        ;; In legacy package.el, we must manually deconstruct the descriptor,
+        ;; because the load function has eval's the descriptor and has a lot of
+        ;; global side-effects.
+        (cl-destructuring-bind
+            (_ name version-string summary requirements &rest _) sexp
+          (epl-package-create
+           :name (intern name)
+           :description
+           (vector (version-to-list version-string)
+                   (mapcar #'epl-package--parse-descriptor-requirement
+                           requirements)
+                   summary)))))))
+
 
 ;;;; Package database access
 (defun epl-package-installed-p (package)
