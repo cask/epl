@@ -277,29 +277,67 @@ variants."
   (epl-package-create :name (package-desc-name package-desc)
                       :description package-desc))
 
+(defun epl-package--parse-info (info)
+  "Parse a package.el INFO."
+  (if (epl--package-desc-p info)
+      (epl-package--from-package-desc info)
+    ;; For legacy package.el, info is a vector [NAME REQUIRES DESCRIPTION
+    ;; VERSION COMMENTARY].  We need to re-shape this vector into the
+    ;; `package-alist' format [VERSION REQUIRES DESCRIPTION] to attach it to the
+    ;; new `epl-package'.
+    (let ((name (intern (aref info 0)))
+          (info (vector (aref info 3) (aref info 1) (aref info 2))))
+      (epl-package-create :name name :description info))))
+
 (defun epl-package-from-buffer (&optional buffer)
   "Create an `epl-package' object from BUFFER.
 
 BUFFER defaults to the current buffer."
   (let ((info (with-current-buffer (or buffer (current-buffer))
                 (package-buffer-info))))
-    (if (epl--package-desc-p info)
-        (epl-package--from-package-desc info)
-      ;; For legacy package.el, info is a vector [NAME REQUIRES DESCRIPTION
-      ;; VERSION COMMENTARY].  We need to re-shape this vector into the
-      ;; `package-alist' format [VERSION REQUIRES DESCRIPTION] to attach it to
-      ;; the new `epl-package'.
-      (let ((name (intern (aref info 0)))
-            (info (vector (aref info 3) (aref info 1) (aref info 2))))
-        (epl-package-create :name name :description info)))))
+    (epl-package--parse-info info)))
 
-(defun epl-package-from-file (file-name)
+(defun epl-package-from-lisp-file (file-name)
   "Parse the package headers the file at FILE-NAME.
 
 Return an `epl-package' object with the header metadata."
   (with-temp-buffer
-    (insert-file-contents file-name)
+    (insert-file-contents-literally file-name)
     (epl-package-from-buffer (current-buffer))))
+
+(defun epl-package-from-tar-file (file-name)
+  "Parse the package tarball at FILE-NAME.
+
+Return a `epl-package' object with the meta data of the tarball
+package in FILE-NAME."
+  (condition-case nil
+      ;; In legacy package.el, `package-tar-file-info' takes the name of the tar
+      ;; file to parse as argument.  In modern package.el, it has no arguments
+      ;; and works on the current buffer.  Hence, we just try to call the legacy
+      ;; version, and if that fails because of a mismatch between formal and
+      ;; actual arguments, we use the modern approach.  To avoid spurious
+      ;; signature warnings by the byte compiler, we suppress warnings when
+      ;; calling the function.
+      (epl-package--parse-info (with-no-warnings
+                                 (package-tar-file-info file-name)))
+    (wrong-number-of-arguments
+     (with-temp-buffer
+       (insert-file-contents-literally file-name)
+       ;; Switch to `tar-mode' to enable extraction of the file.  Modern
+       ;; `package-tar-file-info' relies on `tar-mode', and signals an error if
+       ;; called in a buffer with a different mode.
+       (tar-mode)
+       (epl-package--parse-info (with-no-warnings
+                                  (package-tar-file-info)))))))
+
+(defun epl-package-from-file (file-name)
+  "Parse the package at FILE-NAME.
+
+Return an `epl-package' object with the meta data of the package
+at FILE-NAME."
+  (if (string-match-p (rx ".tar" string-end) file-name)
+      (epl-package-from-tar-file file-name)
+    (epl-package-from-lisp-file file-name)))
 
 (defun epl-package--parse-descriptor-requirement (requirement)
   "Parse a REQUIREMENT in a package descriptor."
