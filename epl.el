@@ -70,6 +70,8 @@
 
 ;; `epl-package-requirements' gets the requirements of a package.
 
+;; `epl-package-directory' gets the installation directory of a package.
+
 ;; `epl-package-from-buffer' creates a package object for the package contained
 ;; in the current buffer.
 
@@ -248,6 +250,19 @@ description to VAR in BODY."
 The requirements are a list of `epl-requirement' objects."
   (epl-package-as-description package
     (mapcar #'epl-requirement--from-req (package-desc-reqs package))))
+
+(defun epl-package-directory (package)
+  "Get the directory PACKAGE is installed to.
+
+Return the absolute path of the installation directory of
+PACKAGE, or nil, if PACKAGE is not installed."
+  (cond
+   ((fboundp 'package-desc-dir)
+    (package-desc-dir (epl-package-description package)))
+   ((fboundp 'package--dir)
+    (package--dir (epl-package-name package)
+                  (epl-package-version-string package)))
+   (:else (error "Cannot get package directory from %S" package))))
 
 (defun epl-package-->= (pkg1 pkg2)
   "Determine whether PKG1 is before PKG2 by version."
