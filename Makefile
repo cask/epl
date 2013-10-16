@@ -21,5 +21,9 @@ clean:
 test: compile
 	$(CASK) exec ert-runner $(TESTARGS)
 
+$(PKGDIR):
+	$(CASK) install
+	touch $(PKGDIR)
+
 %.elc: %.el $(PKGDIR)
 	$(CASK) exec $(EMACS) -Q --batch -f batch-byte-compile $<
