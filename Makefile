@@ -1,5 +1,6 @@
 EMACS ?= emacs
 CASK ?= cask
+TESTARGS =
 
 PKGDIR := $(shell EMACS=$(EMACS) $(CASK) package-directory)
 
@@ -11,15 +12,12 @@ OBJECTS = $(SRCS:.el=.elc)
 
 .PHONY: compile
 compile: $(SRCS)
-	$(CASK) exec $(EMACS) -Q --batch -L . -f batch-byte-compile $(SRCS)
+	$(CASK) exec $(EMACS) -Q --batch -f batch-byte-compile $(SRCS)
 
 .PHONY: clean
 clean:
 	rm -rf $(OBJECTS)
 
 .PHONY: test
-test: clean
-	$(CASK) exec ert-runner
-	$(MAKE) compile
-	$(CASK) exec ert-runner
-	$(MAKE) clean
+test: compile
+	$(CASK) exec ert-runner $(TESTARGS)
