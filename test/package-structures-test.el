@@ -34,27 +34,25 @@
 (require 'epl)
 
 (require 'ert)
-(require 'pcase)
 
 (ert-deftest epl-package-as-description-needs-symbol ()
   ;; We explicitly `eval' the expression here, to avoid eager macro expansion
   ;; kicking in, and triggering the error before the test gets executed
-  (pcase-let* ((expr '(epl-package-as-description "foo"
-                        (message "bar")))
-               (`(,err . ,data) (should-error (eval expr)))
-               (`(,predicate ,value) data))
-    (should (eq err 'wrong-type-argument))
-    (should (eq predicate #'symbolp))
-    (should (equal value "foo"))))
+  (let* ((expr '(epl-package-as-description "foo" (message "bar")))
+         (err-and-data (should-error (eval expr)))
+         (data (cdr err-and-data)))
+    (should (eq (car err-and-data) 'wrong-type-argument))
+    (should (eq (car data) #'symbolp))
+    (should (equal (cadr data) "foo"))))
 
 (ert-deftest epl-package-as-description-needs-variable-bound-to-epl-package ()
-  (pcase-let* ((foo "bar")
-               (`(,err . ,data) (should-error (epl-package-as-description foo
-                                                (message "bar"))))
-               (`(,predicate ,value) data))
-    (should (eq err 'wrong-type-argument))
-    (should (eq predicate #'epl-package-p))
-    (should (equal value "bar"))))
+  (let* ((foo "bar")
+         (err-and-data (should-error (epl-package-as-description foo
+                                       (message "bar"))))
+         (data (cdr err-and-data)))
+    (should (eq (car err-and-data) 'wrong-type-argument))
+    (should (eq (car data) #'epl-package-p))
+    (should (equal (cadr data) "bar"))))
 
 (ert-deftest epl-package-from-file-lisp ()
   (let* ((file (epl-test-resource-file-name "dummy-package.el"))
