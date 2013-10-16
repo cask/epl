@@ -372,13 +372,14 @@ typically ends with -pkg.el."
         ;; because the load function has eval's the descriptor and has a lot of
         ;; global side-effects.
         (cl-destructuring-bind
-            (_ name version-string summary requirements &rest _) sexp
+            (name version-string summary requirements) (cdr sexp)
           (epl-package-create
            :name (intern name)
            :description
            (vector (version-to-list version-string)
                    (mapcar #'epl-package--parse-descriptor-requirement
-                           requirements)
+                           ;; Strip the leading `quote' from the package list
+                           (cadr requirements))
                    summary)))))))
 
 
