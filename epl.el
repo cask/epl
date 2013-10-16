@@ -76,7 +76,11 @@
 ;; `epl-package-from-buffer' creates a package object for the package contained
 ;; in the current buffer.
 
-;; `epl-package-from-file' creates a package object for a package file.
+;; `epl-package-from-file' creates a package object for a package file, either
+;; plain lisp or tarball.
+
+;; `epl-package-from-descriptor-file' creates a package object for a package
+;; description (i.e. *-pkg.el) file.
 
 ;;; Package database access
 
