@@ -11,8 +11,7 @@ SRCS = epl.el
 OBJECTS = $(SRCS:.el=.elc)
 
 .PHONY: compile
-compile: $(SRCS)
-	$(CASK) exec $(EMACS) -Q --batch -f batch-byte-compile $(SRCS)
+compile: $(OBJECTS)
 
 .PHONY: clean
 clean:
@@ -21,3 +20,6 @@ clean:
 .PHONY: test
 test: compile
 	$(CASK) exec ert-runner $(TESTARGS)
+
+%.elc: %.el $(PKGDIR)
+	$(CASK) exec $(EMACS) -Q --batch -f batch-byte-compile $<
