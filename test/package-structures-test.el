@@ -4,6 +4,7 @@
 
 ;; Author: Sebastian Wiesner <lunaryorn@gmail.com>
 ;; Maintainer: Johan Andersson <johan.rejeep@gmail.com>
+;;     Sebastian Wiesner <lunaryorn@gmail.com>
 ;; URL: http://github.com/cask/epl
 
 ;; This file is NOT part of GNU Emacs.
