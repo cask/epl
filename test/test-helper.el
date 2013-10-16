@@ -31,18 +31,29 @@
 (require 'find-func)
 (require 'cl-lib)
 (require 'f)
-(require 'epl)
 
-(defconst epl-test-directory (f-parent (f-this-file))
-  "Directory of the EPL test suite.")
+
+;;;; Directories
 
-(defconst epl-test-resource-directory (f-join epl-test-directory "resources")
-  "Directory of resources for the EPL testsuite.")
+(eval-and-compile
+  (defconst epl-test-directory (f-parent (f-this-file))
+    "Directory of the EPL test suite.")
 
-(defconst epl-test-source-directory (f-parent epl-test-directory)
-  "Source directory of EPL.")
+  (defconst epl-test-resource-directory (f-join epl-test-directory "resources")
+    "Directory of resources for the EPL testsuite.")
 
-;; Ensure that we test against the byte-compiled EPL from the source tree
+  (defconst epl-test-source-directory (f-parent epl-test-directory)
+    "Source directory of EPL."))
+
+
+;;;; Load EPL
+
+;; Load compatibility libraries first
+(load (f-join epl-test-source-directory "compat" "load.el") nil 'no-message)
+
+(require 'epl (f-join epl-test-source-directory "epl"))
+
+;; Check that it is really the right EPL
 (let ((source (symbol-file 'epl-initialize 'defun)))
   (cl-assert (f-same? source (f-join epl-test-source-directory "epl.elc")) nil
              "ERROR: EPL not loaded from byte-compiled source, but from %s! \
