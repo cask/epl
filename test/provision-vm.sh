@@ -31,7 +31,7 @@ add-apt-repository -y ppa:cassou/emacs
 apt-get update -qq
 
 # Install the Emacs packages
-apt-get install -qq -yy emacs24-nox emacs24-nox emacs-snapshot-nox || exit 1
+apt-get install -qq -yy emacs23-nox emacs24-nox emacs-snapshot-nox || exit 1
 
 # Install (stable) Cask
 cask_archive=/tmp/cask-master.zip
