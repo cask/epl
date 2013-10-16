@@ -56,11 +56,14 @@
 
 (ert-deftest epl-package-from-file-lisp ()
   (let* ((file (epl-test-resource-file-name "dummy-package.el"))
-         (package (epl-package-from-file file)))
+         (package (epl-package-from-file file))
+         (summary "EPL: Dummy package for unit tests"))
+    (when (< emacs-major-version 24)
+      ;; Emacs 23 package.el does not strip local variable lines from summary
+      (setq summary (concat summary "  -*- lexical-binding: t; -*-")))
     (should (epl-package-p package))
     (should (string= (epl-package-name package) 'dummy-package))
-    (should (string= (epl-package-summary package)
-                     "EPL: Dummy package for unit tests"))
+    (should (string= (epl-package-summary package) summary))
     (should (equal (epl-package-version package) '(4 3 1 2 -3)))
     (should (equal (epl-package-requirements package)
                    (list (epl-requirement-create :name 'foo :version '(1 2))
