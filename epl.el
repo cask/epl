@@ -107,10 +107,6 @@
 (require 'cl-lib)
 (require 'package)
 
-(setq package-archives nil)             ; Clear the default list of archives to
-                                        ; let the user have exact control over
-                                        ; all archives
-
 (defun epl--package-desc-p (package)
   "Whether PACKAGE is a `package-desc' object.
 
