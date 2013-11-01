@@ -306,7 +306,7 @@ BUFFER defaults to the current buffer."
 
 Return an `epl-package' object with the header metadata."
   (with-temp-buffer
-    (insert-file-contents-literally file-name)
+    (insert-file-contents file-name)
     (epl-package-from-buffer (current-buffer))))
 
 (defun epl-package-from-tar-file (file-name)
