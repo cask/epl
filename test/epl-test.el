@@ -1,4 +1,4 @@
-;;; package-structures-test.el --- EPL: Tests for package structures  -*- lexical-binding: t; -*-
+;;; epl-test.el --- EPL: Test suite -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2013, 2014  Sebastian Wiesner
 
@@ -27,13 +27,30 @@
 
 ;;; Commentary:
 
-;; Test the `epl-package' and related structures.
+;; Test EPL
 
 ;;; Code:
 
 (require 'epl)
-
+(require 'f)
 (require 'ert)
+
+
+;;;; Directories
+(defconst epl-test-directory (f-parent (f-this-file))
+  "The directory of the test suite.")
+
+
+;;;; Resource handling
+(defconst epl-test-resource-directory (f-join epl-test-directory "resources")
+  "The directory of test resource files.")
+
+(defun epl-test-resource-file-name (resource)
+  "Get the file name of a RESOURCE."
+  (f-join epl-test-resource-directory resource))
+
+
+;;;; Package structures
 
 (ert-deftest epl-package-as-description/variable-must-be-a-symbol ()
   ;; We explicitly `eval' the expression here, to avoid eager macro expansion
@@ -125,4 +142,6 @@ package.el tends to have such unfortunate side effects."
    (epl-package-from-file
     (epl-test-resource-file-name "invalid-package-pkg.el"))))
 
-;;; package-structures-test.el ends here
+(provide 'epl-test)
+
+;;; epl-test.el ends here
