@@ -1,6 +1,6 @@
 ;;; epl.el --- Emacs Package Library -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2013 Sebastian Wiesner
+;; Copyright (C) 2013, 2014 Sebastian Wiesner
 
 ;; Author: Sebastian Wiesner <lunaryorn@gmail.com>
 ;; Maintainer: Johan Andersson <johan.rejeep@gmail.com>

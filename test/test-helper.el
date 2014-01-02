@@ -1,6 +1,6 @@
 ;;; test-helper.el --- EPL: Unit test helpers -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2013  Sebastian Wiesner
+;; Copyright (C) 2013, 2014  Sebastian Wiesner
 
 ;; Author: Sebastian Wiesner <lunaryorn@gmail.com>
 ;; Maintainer: Johan Andersson <johan.rejeep@gmail.com>
