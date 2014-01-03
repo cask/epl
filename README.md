@@ -33,7 +33,7 @@ version.  Stable GNU Emacs 24 is supported, but limited in features.  GNU Emacs
 23 is only supported as long as possible without greater pain.  It may be
 dropped any time if obstacles appear.
 
-If you have any chance, use Emacs trunk.
+If you have any choice, use Emacs trunk.
 
 Usage
 -----
