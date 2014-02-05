@@ -28,6 +28,7 @@ apt-get install -qq -y make curl unzip python-software-properties
 
 # Add the Emacs PPA
 add-apt-repository -y ppa:cassou/emacs
+add-apt-repository -y ppa:ubuntu-elisp/ppa
 apt-get update -qq
 
 # Install the Emacs packages
