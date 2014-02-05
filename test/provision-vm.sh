@@ -36,6 +36,9 @@ apt-get install -qq -yy emacs23-common emacs23-bin-common emacs23-nox || exit 1
 apt-get install -qq -yy emacs24-common emacs24-bin-common emacs24-nox || exit 1
 apt-get install -qq -yy emacs-snapshot-common emacs-snapshot-nox || exit 1
 
+# Use stable Emacs as default
+update-alternatives --set emacs /usr/bin/emacs24-nox
+
 # Install (stable) Cask
 cask_archive=/tmp/cask-master.zip
 cask_dir=/opt/cask-master
