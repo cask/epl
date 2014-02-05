@@ -9,4 +9,7 @@ Vagrant.configure('2') do |config|
 
   config.vm.provision :shell, :path => 'test/provision-vm.sh'
 
+  config.vm.provider 'virtualbox' do |v|
+    v.name = 'epl'
+  end
 end
