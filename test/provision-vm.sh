@@ -32,7 +32,9 @@ add-apt-repository -y ppa:ubuntu-elisp/ppa
 apt-get update -qq
 
 # Install the Emacs packages
-apt-get install -qq -yy emacs23-nox emacs24-nox emacs-snapshot-nox || exit 1
+apt-get install -qq -yy emacs23-common emacs23-bin-common emacs23-nox || exit 1
+apt-get install -qq -yy emacs24-common emacs24-bin-common emacs24-nox || exit 1
+apt-get install -qq -yy emacs-snapshot-common emacs-snapshot-nox || exit 1
 
 # Install (stable) Cask
 cask_archive=/tmp/cask-master.zip
