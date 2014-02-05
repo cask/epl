@@ -96,6 +96,8 @@
 
 ;;; Package operations
 
+;; `epl-install-file' installs a package file.
+
 ;; `epl-package-install' installs a package.
 
 ;; `epl-package-delete' deletes a package.
@@ -493,6 +495,8 @@ packages."
 
 
 ;;;; Package operations
+
+(defalias 'epl-install-file 'package-install-file)
 
 (defun epl-package-install (package &optional force)
   "Install a PACKAGE.
