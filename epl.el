@@ -94,6 +94,8 @@
 
 ;; `epl-find-upgrades' finds all upgradable packages.
 
+;; `epl-built-in-p' return true if package is built-in to Emacs.
+
 ;;; Package operations
 
 ;; `epl-install-file' installs a package file.
@@ -492,6 +494,8 @@ packages."
                                     :available available-pkg)
                 upgrades))))
     (nreverse upgrades)))
+
+(defalias 'epl-built-in-p 'package-built-in-p)
 
 
 ;;;; Package operations
