@@ -535,7 +535,12 @@ PACKAGE is a `epl-package' object to delete."
       (let ((name (symbol-name (epl-package-name package)))
             (version (epl-package-version-string package)))
         (with-no-warnings
-          (package-delete name version))))))
+          (package-delete name version))
+        ;; Legacy package.el does not remove the deleted package
+        ;; from the `package-alist', so we do it manually here.
+        (let ((pkg (assq (epl-package-name package) package-alist)))
+          (when pkg
+            (setq package-alist (delq pkg package-alist))))))))
 
 (defun epl-upgrade (&optional packages preserve-obsolete)
   "Upgrade PACKAGES.
