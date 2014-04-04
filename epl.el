@@ -119,7 +119,7 @@ defined as function."
   (and (fboundp 'package-desc-p) (package-desc-p package)))
 
 
-;;;; Package directory
+;;; Package directory
 (defun epl-package-dir ()
   "Get the directory of packages."
   package-user-dir)
@@ -134,7 +134,7 @@ defined as function."
   (epl-initialize))
 
 
-;;;; Package system management
+;;; Package system management
 (defvar epl--load-path-before-initialize nil
   "Remember the load path for `epl-reset'.")
 
@@ -165,7 +165,7 @@ package archives and reset the package directory."
   (epl-change-package-dir (epl-default-package-dir)))
 
 
-;;;; Package structures
+;;; Package structures
 (cl-defstruct (epl-requirement
                (:constructor epl-requirement-create))
   "Structure describing a requirement.
@@ -387,7 +387,7 @@ typically ends with -pkg.el."
                    summary)))))))
 
 
-;;;; Package database access
+;;; Package database access
 (defun epl-package-installed-p (package)
   "Determine whether a PACKAGE is installed.
 
@@ -498,7 +498,7 @@ packages."
 (defalias 'epl-built-in-p 'package-built-in-p)
 
 
-;;;; Package operations
+;;; Package operations
 
 (defalias 'epl-install-file 'package-install-file)
 
