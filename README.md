@@ -1,6 +1,7 @@
 EPL
 ===
 
+[![License GPL 3][badge-license]][copying]
 [![Build Status][badge-travis]][travis]
 
 **E**macs **P**ackage **L**ibrary
@@ -56,6 +57,7 @@ PURPOSE.  See the GNU General Public License for more details.
 
 See [`COPYING`][copying] for the complete text of the license.
 
+[badge-license]: https://img.shields.io/badge/license-GPL_3-green.svg?dummy
 [badge-travis]: https://travis-ci.org/cask/epl.svg?branch=master
 [travis]: https://travis-ci.org/cask/epl
 [MELPA]: http://melpa.milkbox.net/#/epl
