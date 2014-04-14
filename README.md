@@ -1,10 +1,8 @@
-EPL
-===
+EPL — Emacs Package Library
+===========================
 
 [![License GPL 3][badge-license]][copying]
 [![Build Status][badge-travis]][travis]
-
-**E**macs **P**ackage **L**ibrary
 
 EPL provides a convenient high-level API for various package.el versions, and
 aims to overcome its most striking idiocies.
