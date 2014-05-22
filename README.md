@@ -21,17 +21,10 @@ In your [`Cask`][cask]:
 (depends-on "epl")
 ```
 
-EPL supports GNU Emacs 23 with the [3rd party `package.el`][legacy-package], and
-GNU Emacs 24 with the built-in `package.el` library.  Other versions of Emacs,
-and other flavors of Emacs (e.g. XEmacs, Aquamacs, etc.) are *not* supported.
-
-At the time of writing, Emacs trunk (upcoming Emacs 24.4) is the preferred
-version, because its `package.el` is the most advanced and best implemented
-version.  Stable GNU Emacs 24 is supported, but limited in features.  GNU Emacs
-23 is only supported as long as possible without greater pain.  It may be
-dropped any time if obstacles appear.
-
-If you have any choice, use Emacs trunk.
+EPL supports GNU Emacs 24 with the built-in `package.el` library.  EPL should
+also work on GNU Emacs 23 with the [3rd party `package.el`][legacy-package], but
+this combination is not regularly tested anymore.  Other versions of Emacs, and
+other flavors of Emacs (e.g. XEmacs, Aquamacs, etc.) are *not* supported.
 
 Usage
 -----

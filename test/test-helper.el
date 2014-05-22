@@ -31,8 +31,6 @@
 (let* ((current-file (if load-in-progress load-file-name (buffer-file-name)))
        (source-directory (locate-dominating-file current-file "Cask"))
        (pkg-rel-dir (format ".cask/%s/elpa" emacs-version)))
-  (load (expand-file-name "compat/load.el") nil 'no-message)
-
   (setq package-user-dir (expand-file-name pkg-rel-dir source-directory))
   (package-initialize)
 
