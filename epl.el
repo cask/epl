@@ -2,9 +2,9 @@
 
 ;; Copyright (C) 2013, 2014 Sebastian Wiesner
 
-;; Author: Sebastian Wiesner <lunaryorn@gmail.com>
+;; Author: Sebastian Wiesner <swiesner@lunaryorn.com>
 ;; Maintainer: Johan Andersson <johan.rejeep@gmail.com>
-;;     Sebastian Wiesner <lunaryorn@gmail.com>
+;;     Sebastian Wiesner <swiesner@lunaryorn.com>
 ;; Version: 0.7-cvs
 ;; Package-Requires: ((cl-lib "0.3"))
 ;; Keywords: convenience
