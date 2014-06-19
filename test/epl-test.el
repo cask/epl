@@ -165,6 +165,14 @@ package.el tends to have such unfortunate side effects."
        (epl-package-delete package)
        (should-not (epl-package-installed-p package))))))
 
+(ert-deftest epl-package-directory/should-work ()
+  (epl-test/with-sandbox
+   (epl-install-file (epl-test-resource-file-name "smartie-package.el"))
+   (let ((package (epl-find-installed-package 'smartie-package)))
+     (should (equal (file-name-nondirectory (epl-package-directory package))
+                    "smartie-package-1.2.3"))
+     (epl-package-delete package))))
+
 (provide 'epl-test)
 
 ;;; epl-test.el ends here

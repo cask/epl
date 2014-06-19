@@ -265,7 +265,7 @@ PACKAGE, or nil, if PACKAGE is not installed."
    ((fboundp 'package-desc-dir)
     (package-desc-dir (epl-package-description package)))
    ((fboundp 'package--dir)
-    (package--dir (epl-package-name package)
+    (package--dir (symbol-name (epl-package-name package))
                   (epl-package-version-string package)))
    (:else (error "Cannot get package directory from %S" package))))
 
