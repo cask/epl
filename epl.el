@@ -445,7 +445,7 @@ no package with NAME is installed."
   (car (epl--find-package-in-list name package-alist)))
 
 (defun epl-available-packages ()
-  "Get all packages available for installed.
+  "Get all packages available for installation.
 
 Return a list of package objects."
   (apply #'append (mapcar #'epl--parse-package-list-entry
