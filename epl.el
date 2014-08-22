@@ -89,9 +89,10 @@
 
 ;; `epl-package-obsolete-p' determines whether a package is obsolete.
 
-;; `epl-built-in-packages', `epl-installed-packages' and
-;; `epl-available-packages' get all packages built-in, installed or available
-;; for installation respectively.
+;; `epl-built-in-packages', `epl-installed-packages',
+;; `epl-obsolete-packages' and `epl-available-packages' get all
+;; packages built-in, installed, obsolete or available for installation
+;; respectively.
 
 ;; `epl-find-built-in-package', `epl-find-installed-packages' and
 ;; `epl-find-available-packages' find built-in, installed and available packages
@@ -475,6 +476,16 @@ Return a list of `epl-package' objects parsed from ENTRY."
 
 Return a list of package objects."
   (apply #'append (mapcar #'epl--parse-package-list-entry package-alist)))
+
+(defun epl-obsolete-packages ()
+  "Get all obsolete packages.
+
+Return a list of package objects."
+  (let (packages)
+    (dolist (package (epl-installed-packages))
+      (when (epl-package-obsolete-p package)
+        (push package packages)))
+    (nreverse packages)))
 
 (defun epl--find-package-in-list (name list)
   "Find a package by NAME in a package LIST.
