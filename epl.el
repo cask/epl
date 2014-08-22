@@ -394,16 +394,17 @@ typically ends with -pkg.el."
 
 
 ;;; Package database access
-(defun epl-package-installed-p (package)
-  "Determine whether a PACKAGE is installed.
+(defun epl-package-installed-p (package &optional min-version)
+  "Determine whether a PACKAGE, of MIN-VERSION or newer, is installed.
 
-PACKAGE is either a package name as symbol, or a package object."
+PACKAGE is either a package name as symbol, or a package object.
+When a explicit MIN-VERSION is provided it overwrites the version of the PACKAGE object."
   (let ((name (if (epl-package-p package)
                   (epl-package-name package)
                 package))
-        (version (when (epl-package-p package)
-                   (epl-package-version package))))
-    (package-installed-p name version)))
+        (min-version (or min-version (and (epl-package-p package)
+                                          (epl-package-version package)))))
+    (package-installed-p name min-version)))
 
 (defun epl--parse-built-in-entry (entry)
   "Parse an ENTRY from the list of built-in packages.
