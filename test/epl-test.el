@@ -160,7 +160,7 @@ package.el tends to have such unfortunate side effects."
   (epl-test/with-sandbox
    (let ((smartie-package (epl-test-resource-file-name "smartie-package.el")))
      (epl-install-file smartie-package)
-     (let ((package (epl-find-installed-package 'smartie-package)))
+     (let ((package (car (epl-find-installed-packages 'smartie-package))))
        (should (epl-package-installed-p package))
        (epl-package-delete package)
        (should-not (epl-package-installed-p package))))))

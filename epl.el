@@ -89,8 +89,8 @@
 ;; `epl-installed-packages' and `epl-available-packages' get all packages
 ;; installed and available for installation respectively.
 
-;; `epl-find-installed-package' and `epl-find-available-packages' find installed
-;; and available packages by name.
+;; `epl-find-installed-packages' and `epl-find-available-packages' find
+;; installed and available packages by name.
 
 ;; `epl-find-upgrades' finds all upgradable packages.
 
@@ -435,14 +435,25 @@ Return a list of corresponding `epl-package' objects."
       (epl--parse-package-list-entry entry))))
 
 (defun epl-find-installed-package (name)
-  "Find an installed package by NAME.
+  "Find the latest installed package by NAME.
 
 NAME is a package name, as symbol.
 
-Return the installed package as `epl-package' object, or nil, if
-no package with NAME is installed."
-  ;; FIXME: We must return *all* installed packages here
-  (car (epl--find-package-in-list name package-alist)))
+Return the installed package with the highest version number as
+`epl-package' object, or nil, if no package with NAME is
+installed."
+  (car (epl-find-installed-packages name)))
+(make-obsolete 'epl-find-installed-package 'epl-find-installed-packages "0.7")
+
+(defun epl-find-installed-packages (name)
+  "Find all installed packages by NAME.
+
+NAME is a package name, as symbol.
+
+Return a list of all installed packages with NAME, sorted by
+version number in descending order.  Return nil, if there are no
+packages with NAME."
+  (epl--find-package-in-list name package-alist))
 
 (defun epl-available-packages ()
   "Get all packages available for installation.
