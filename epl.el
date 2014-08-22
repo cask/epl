@@ -87,6 +87,8 @@
 ;; `epl-package-installed-p' determines whether a package is installed, either
 ;; built-in or explicitly installed.
 
+;; `epl-package-obsolete-p' determines whether a package is obsolete.
+
 ;; `epl-built-in-packages', `epl-installed-packages' and
 ;; `epl-available-packages' get all packages built-in, installed or available
 ;; for installation respectively.
@@ -434,6 +436,18 @@ there is no built-in package with NAME."
     ;; `package--builtins', because otherwise `package--builtins' might be
     ;; empty.
     (epl--parse-built-in-entry (assq name package--builtins))))
+
+(defun epl-package-obsolete-p (package)
+  "Determine whether a PACKAGE is obsolete.
+
+PACKAGE is either a package name as symbol, or a package object."
+  (let* ((name (if (epl-package-p package)
+                   (epl-package-name package)
+                 package))
+         (installed (car (epl-find-installed-packages name)))
+         (available (car (epl-find-available-packages name))))
+    (and installed available
+         (version-list-< (epl-package-version installed) (epl-package-version available)))))
 
 (defun epl--parse-package-list-entry (entry)
   "Parse a list of packages from ENTRY.
