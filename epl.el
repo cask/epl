@@ -84,13 +84,16 @@
 
 ;;; Package database access
 
-;; `epl-package-installed-p' determines whether a package is installed.
+;; `epl-package-installed-p' determines whether a package is installed, either
+;; built-in or explicitly installed.
 
-;; `epl-installed-packages' and `epl-available-packages' get all packages
-;; installed and available for installation respectively.
+;; `epl-built-in-packages', `epl-installed-packages' and
+;; `epl-available-packages' get all packages built-in, installed or available
+;; for installation respectively.
 
-;; `epl-find-installed-packages' and `epl-find-available-packages' find
-;; installed and available packages by name.
+;; `epl-find-built-in-package', `epl-find-installed-packages' and
+;; `epl-find-available-packages' find built-in, installed and available packages
+;; by name.
 
 ;; `epl-find-upgrades' finds all upgradable packages.
 
@@ -398,6 +401,39 @@ PACKAGE is either a package name as symbol, or a package object."
         (version (when (epl-package-p package)
                    (epl-package-version package))))
     (package-installed-p name version)))
+
+(defun epl--parse-built-in-entry (entry)
+  "Parse an ENTRY from the list of built-in packages.
+
+Return the corresponding `epl-package' object."
+  (if (fboundp 'package--from-builtin)
+      ;; In package-desc package.el, convert the built-in package to a
+      ;; `package-desc' and convert that to an `epl-package'
+      (epl-package--from-package-desc (package--from-builtin entry))
+    (epl-package-create :name (car entry) :description (cdr entry))))
+
+(defun epl-built-in-packages ()
+  "Get all built-in packages.
+
+Return a list of `epl-package' objects."
+  ;; This looks mighty strange, but it's the only way to force package.el to
+  ;; build the list of built-in packages.  Without this, `package--builtins'
+  ;; might be empty.
+  (package-built-in-p 'foo)
+  (mapcar #'epl--parse-built-in-entry package--builtins))
+
+(defun epl-find-built-in-package (name)
+  "Find a built-in package with NAME.
+
+NAME is a package name, as symbol.
+
+Return the built-in package as `epl-package' object, or nil if
+there is no built-in package with NAME."
+  (when (package-built-in-p name)
+    ;; We must call `package-built-in-p' *before* inspecting
+    ;; `package--builtins', because otherwise `package--builtins' might be
+    ;; empty.
+    (epl--parse-built-in-entry (assq name package--builtins))))
 
 (defun epl--parse-package-list-entry (entry)
   "Parse a list of packages from ENTRY.

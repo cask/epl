@@ -156,6 +156,24 @@ package.el tends to have such unfortunate side effects."
    (epl-package-from-file
     (epl-test-resource-file-name "invalid-package-pkg.el"))))
 
+(ert-deftest epl-package-directory/should-work ()
+  (epl-test/with-sandbox
+   (epl-install-file (epl-test-resource-file-name "smartie-package.el"))
+   (let ((package (epl-find-installed-package 'smartie-package)))
+     (should (equal (file-name-nondirectory (epl-package-directory package))
+                    "smartie-package-1.2.3"))
+     (epl-package-delete package))))
+
+
+;;; Package database
+(ert-deftest epl-built-in-packages/catches-all ()
+  ;; Make sure that `package--builtins' is filled for our test
+  (package-built-in-p 'foo)
+  (should package--builtins)
+  (should (equal (length (epl-built-in-packages)) (length package--builtins))))
+
+
+;;; Package operations
 (ert-deftest epl-package-delete/should-not-be-installed ()
   (epl-test/with-sandbox
    (let ((smartie-package (epl-test-resource-file-name "smartie-package.el")))
@@ -164,14 +182,6 @@ package.el tends to have such unfortunate side effects."
        (should (epl-package-installed-p package))
        (epl-package-delete package)
        (should-not (epl-package-installed-p package))))))
-
-(ert-deftest epl-package-directory/should-work ()
-  (epl-test/with-sandbox
-   (epl-install-file (epl-test-resource-file-name "smartie-package.el"))
-   (let ((package (epl-find-installed-package 'smartie-package)))
-     (should (equal (file-name-nondirectory (epl-package-directory package))
-                    "smartie-package-1.2.3"))
-     (epl-package-delete package))))
 
 (provide 'epl-test)
 
