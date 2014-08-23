@@ -117,7 +117,7 @@
 (require 'cl-lib)
 (require 'package)
 
-(defun epl--package-desc-p (package)
+(defsubst epl--package-desc-p (package)
   "Whether PACKAGE is a `package-desc' object.
 
 Like `package-desc-p', but return nil, if `package-desc-p' is not
@@ -221,7 +221,7 @@ description to VAR in BODY."
          ,@body)
      (signal 'wrong-type-argument (list #'epl-package-p ,var))))
 
-(defun epl-package--package-desc-p (package)
+(defsubst epl-package--package-desc-p (package)
   "Whether the description of PACKAGE is a `package-desc'."
   (epl--package-desc-p (epl-package-description package)))
 
@@ -248,10 +248,10 @@ description to VAR in BODY."
      ((fboundp 'package-desc-doc) (package-desc-doc package)) ; Legacy
      (:else (error "Cannot get summary from %S" package)))))
 
-(defun epl-requirement--from-req (req)
+(defsubst epl-requirement--from-req (req)
   "Create a `epl-requirement' from a `package-desc' REQ."
-  (cl-destructuring-bind (name version) req
-    (epl-requirement-create :name name
+  (let  ((version (cadr req)))
+    (epl-requirement-create :name (car req)
                             :version (if (listp version) version
                                        (version-to-list version)))))
 
@@ -501,7 +501,7 @@ Return a list of package objects."
   (append (epl--filter-outdated-packages (epl-installed-packages))
           (epl--filter-outdated-packages (epl-built-in-packages))))
 
-(defun epl--find-package-in-list (name list)
+(defsubst epl--find-package-in-list (name list)
   "Find a package by NAME in a package LIST.
 
 Return a list of corresponding `epl-package' objects."
