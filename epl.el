@@ -87,12 +87,12 @@
 ;; `epl-package-installed-p' determines whether a package is installed, either
 ;; built-in or explicitly installed.
 
-;; `epl-package-obsolete-p' determines whether a package is obsolete.
+;; `epl-package-outdated-p' determines whether a package is outdated, that is,
+;; whether a package with a higher version number is available.
 
-;; `epl-built-in-packages', `epl-installed-packages',
-;; `epl-obsolete-packages' and `epl-available-packages' get all
-;; packages built-in, installed, obsolete or available for installation
-;; respectively.
+;; `epl-built-in-packages', `epl-installed-packages', `epl-outdated-packages'
+;; and `epl-available-packages' get all packages built-in, installed, outdated,
+;; or available for installation respectively.
 
 ;; `epl-find-built-in-package', `epl-find-installed-packages' and
 ;; `epl-find-available-packages' find built-in, installed and available packages
@@ -438,17 +438,20 @@ there is no built-in package with NAME."
     ;; empty.
     (epl--parse-built-in-entry (assq name package--builtins))))
 
-(defun epl-package-obsolete-p (package)
-  "Determine whether a PACKAGE is obsolete.
+(defun epl-package-outdated-p (package)
+  "Determine whether a PACKAGE is outdated.
+
+A package is outdated, if there is an available package with a
+higher version.
 
 PACKAGE is either a package name as symbol, or a package object."
-  (let* ((name (if (epl-package-p package)
-                   (epl-package-name package)
-                 package))
-         (installed (car (epl-find-installed-packages name)))
-         (available (car (epl-find-available-packages name))))
-    (and installed available
-         (version-list-< (epl-package-version installed) (epl-package-version available)))))
+  (let* ((package (if (epl-package-p package)
+                      package
+                    (car (epl-find-installed-packages package))))
+         (available (car (epl-find-available-packages
+                          (epl-package-name package)))))
+    (and package available (version-list-< (epl-package-version package)
+                                           (epl-package-version available)))))
 
 (defun epl--parse-package-list-entry (entry)
   "Parse a list of packages from ENTRY.
@@ -477,8 +480,8 @@ Return a list of `epl-package' objects parsed from ENTRY."
 Return a list of package objects."
   (apply #'append (mapcar #'epl--parse-package-list-entry package-alist)))
 
-(defun epl-obsolete-packages ()
-  "Get all obsolete packages.
+(defun epl-outdated-packages ()
+  "Get all outdated packages, as in `epl-package-outdated-p'.
 
 Return a list of package objects."
   (let (packages)
