@@ -444,10 +444,16 @@ there is no built-in package with NAME."
 A package is outdated, if there is an available package with a
 higher version.
 
-PACKAGE is either a package name as symbol, or a package object."
+PACKAGE is either a package name as symbol, or a package object.
+In the former case, test the installed or built-in package with
+the highest version number, in the later case, test the package
+object itself.
+
+Return t, if the package is outdated, or nil otherwise."
   (let* ((package (if (epl-package-p package)
                       package
-                    (car (epl-find-installed-packages package))))
+                    (or (car (epl-find-installed-packages package))
+                        (epl-find-built-in-package package))))
          (available (car (epl-find-available-packages
                           (epl-package-name package)))))
     (and package available (version-list-< (epl-package-version package)
@@ -480,15 +486,20 @@ Return a list of `epl-package' objects parsed from ENTRY."
 Return a list of package objects."
   (apply #'append (mapcar #'epl--parse-package-list-entry package-alist)))
 
+(defsubst epl--filter-outdated-packages (packages)
+  "Filter outdated packages from PACKAGES."
+  (let (res)
+    (dolist (package packages)
+      (when (epl-package-obsolete-p package)
+        (push package res)))
+    (nreverse res)))
+
 (defun epl-outdated-packages ()
   "Get all outdated packages, as in `epl-package-outdated-p'.
 
 Return a list of package objects."
-  (let (packages)
-    (dolist (package (epl-installed-packages))
-      (when (epl-package-obsolete-p package)
-        (push package packages)))
-    (nreverse packages)))
+  (append (epl--filter-outdated-packages (epl-installed-packages))
+          (epl--filter-outdated-packages (epl-built-in-packages))))
 
 (defun epl--find-package-in-list (name list)
   "Find a package by NAME in a package LIST.
