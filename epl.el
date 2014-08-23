@@ -87,9 +87,12 @@
 ;; `epl-package-installed-p' determines whether a package is installed, either
 ;; built-in or explicitly installed.
 
-;; `epl-built-in-packages', `epl-installed-packages' and
-;; `epl-available-packages' get all packages built-in, installed or available
-;; for installation respectively.
+;; `epl-package-obsolete-p' determines whether a package is obsolete.
+
+;; `epl-built-in-packages', `epl-installed-packages',
+;; `epl-obsolete-packages' and `epl-available-packages' get all
+;; packages built-in, installed, obsolete or available for installation
+;; respectively.
 
 ;; `epl-find-built-in-package', `epl-find-installed-packages' and
 ;; `epl-find-available-packages' find built-in, installed and available packages
@@ -435,6 +438,18 @@ there is no built-in package with NAME."
     ;; empty.
     (epl--parse-built-in-entry (assq name package--builtins))))
 
+(defun epl-package-obsolete-p (package)
+  "Determine whether a PACKAGE is obsolete.
+
+PACKAGE is either a package name as symbol, or a package object."
+  (let* ((name (if (epl-package-p package)
+                   (epl-package-name package)
+                 package))
+         (installed (car (epl-find-installed-packages name)))
+         (available (car (epl-find-available-packages name))))
+    (and installed available
+         (version-list-< (epl-package-version installed) (epl-package-version available)))))
+
 (defun epl--parse-package-list-entry (entry)
   "Parse a list of packages from ENTRY.
 
@@ -461,6 +476,16 @@ Return a list of `epl-package' objects parsed from ENTRY."
 
 Return a list of package objects."
   (apply #'append (mapcar #'epl--parse-package-list-entry package-alist)))
+
+(defun epl-obsolete-packages ()
+  "Get all obsolete packages.
+
+Return a list of package objects."
+  (let (packages)
+    (dolist (package (epl-installed-packages))
+      (when (epl-package-obsolete-p package)
+        (push package packages)))
+    (nreverse packages)))
 
 (defun epl--find-package-in-list (name list)
   "Find a package by NAME in a package LIST.
