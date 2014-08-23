@@ -498,8 +498,7 @@ Return a list of package objects."
   "Get all outdated packages, as in `epl-package-outdated-p'.
 
 Return a list of package objects."
-  (append (epl--filter-outdated-packages (epl-installed-packages))
-          (epl--filter-outdated-packages (epl-built-in-packages))))
+  (epl--filter-outdated-packages (epl-installed-packages)))
 
 (defsubst epl--find-package-in-list (name list)
   "Find a package by NAME in a package LIST.
