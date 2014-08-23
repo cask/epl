@@ -490,7 +490,7 @@ Return a list of package objects."
   "Filter outdated packages from PACKAGES."
   (let (res)
     (dolist (package packages)
-      (when (epl-package-obsolete-p package)
+      (when (epl-package-outdated-p package)
         (push package res)))
     (nreverse res)))
 
