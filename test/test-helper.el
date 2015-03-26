@@ -1,6 +1,6 @@
 ;;; test-helper.el --- EPL: Non interactive unit test initialization -*- lexical-binding: t; -*-
 
-;; Copyright (C) 2013, 2014  Sebastian Wiesner
+;; Copyright (C) 2013-2015  Sebastian Wiesner
 
 ;; Author: Sebastian Wiesner <swiesner@lunaryorn.com>
 ;; Maintainer: Johan Andersson <johan.rejeep@gmail.com>
