@@ -1,6 +1,7 @@
 ;;; epl.el --- Emacs Package Library -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2013-2015 Sebastian Wiesner
+;; Copyright (C) 1985-1986, 1992, 1994-1995, 1999-2015 Free Software
 
 ;; Author: Sebastian Wiesner <swiesner@lunaryorn.com>
 ;; Maintainer: Johan Andersson <johan.rejeep@gmail.com>
@@ -117,12 +118,44 @@
 (require 'cl-lib)
 (require 'package)
 
+
+(unless (fboundp #'define-error)
+  ;; `define-error' for 24.3 and earlier, copied from subr.el
+  (defun define-error (name message &optional parent)
+    "Define NAME as a new error signal.
+MESSAGE is a string that will be output to the echo area if such an error
+is signaled without being caught by a `condition-case'.
+PARENT is either a signal or a list of signals from which it inherits.
+Defaults to `error'."
+    (unless parent (setq parent 'error))
+    (let ((conditions
+           (if (consp parent)
+               (apply #'append
+                      (mapcar (lambda (parent)
+                                (cons parent
+                                      (or (get parent 'error-conditions)
+                                          (error "Unknown signal `%s'" parent))))
+                              parent))
+             (cons parent (get parent 'error-conditions)))))
+      (put name 'error-conditions
+           (delete-dups (copy-sequence (cons name conditions))))
+      (when message (put name 'error-message message)))))
+
 (defsubst epl--package-desc-p (package)
   "Whether PACKAGE is a `package-desc' object.
 
 Like `package-desc-p', but return nil, if `package-desc-p' is not
 defined as function."
   (and (fboundp 'package-desc-p) (package-desc-p package)))
+
+
+;;; EPL errors
+(define-error 'epl-error "EPL error")
+
+(define-error 'epl-invalid-package "Invalid EPL package" 'epl-error)
+
+(define-error 'epl-invalid-package-file "Invalid EPL package file"
+  'epl-invalid-package)
 
 
 ;;; Package directory
@@ -306,9 +339,14 @@ variants."
 (defun epl-package-from-buffer (&optional buffer)
   "Create an `epl-package' object from BUFFER.
 
-BUFFER defaults to the current buffer."
+BUFFER defaults to the current buffer.
+
+Signal `epl-invalid-package' if the buffer does not contain a
+valid package file."
   (let ((info (with-current-buffer (or buffer (current-buffer))
-                (package-buffer-info))))
+                (condition-case err
+                    (package-buffer-info)
+                  (error (signal 'epl-invalid-package (cdr err)))))))
     (epl-package--parse-info info)))
 
 (defun epl-package-from-lisp-file (file-name)
@@ -317,7 +355,13 @@ BUFFER defaults to the current buffer."
 Return an `epl-package' object with the header metadata."
   (with-temp-buffer
     (insert-file-contents file-name)
-    (epl-package-from-buffer (current-buffer))))
+    (condition-case err
+        (epl-package-from-buffer (current-buffer))
+      ;; Attach file names to invalid package errors
+      (epl-invalid-package
+       (signal 'epl-invalid-package-file (cons file-name (cdr err))))
+      ;; Forward other errors
+      (error (signal (car err) (cdr err))))))
 
 (defun epl-package-from-tar-file (file-name)
   "Parse the package tarball at FILE-NAME.

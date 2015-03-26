@@ -85,6 +85,23 @@ exist when entering the sandbox environment."
     (should (eq (car data) #'epl-package-p))
     (should (equal (cadr data) "bar"))))
 
+(ert-deftest epl-package-from-buffer/invalid-lisp-package ()
+  (with-temp-buffer
+    (insert "
+foo.el --- Foo
+
+Version: 1
+Package-Requires: ((foo
+
+;;; foo.el ends here")
+    (should-error (epl-package-from-buffer) :type '(epl-invalid-package))))
+
+(ert-deftest epl-package-from-lisp-file/invalid-lisp-package ()
+  (let* ((file-name (epl-test-resource-file-name "invalid-package.el"))
+         (err (should-error (epl-package-from-lisp-file file-name)
+                              :type '(epl-invalid-package-file))))
+    (should (equal (cadr err) file-name))))
+
 (ert-deftest epl-package-from-file/valid-lisp-package ()
   (let* ((file (epl-test-resource-file-name "dummy-package.el"))
          (package (epl-package-from-file file))
