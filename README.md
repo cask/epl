@@ -21,10 +21,14 @@ In your [`Cask`][cask]:
 (depends-on "epl")
 ```
 
+Alternatively, users of Debian 9 or later or Ubuntu 16.04 or later may
+simply `apt-get install elpa-epl`.
+
 EPL supports GNU Emacs 24 with the built-in `package.el` library.  EPL should
 also work on GNU Emacs 23 with the [3rd party `package.el`][legacy-package], but
 this combination is not regularly tested anymore.  Other versions of Emacs, and
-other flavors of Emacs (e.g. XEmacs, Aquamacs, etc.) are *not* supported.
+other flavors of Emacs (e.g. XEmacs, Aquamacs, etc.) are *not*
+supported.
 
 Usage
 -----
