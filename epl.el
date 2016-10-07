@@ -37,6 +37,8 @@
 
 ;;; Package directory selection
 
+;; `epl-upgrade' upgrade all upgradeable packages
+
 ;; `epl-package-dir' gets the directory of packages.
 
 ;; `epl-default-package-dir' gets the default package directory.
@@ -682,6 +684,7 @@ PRESERVE-OBSOLETE is non-nil.
 
 Return a list of all performed upgrades, as a list of
 `epl-upgrade' objects."
+  (interactive)
   (let ((upgrades (epl-find-upgrades packages)))
     (dolist (upgrade upgrades)
       (epl-package-install (epl-upgrade-available upgrade) 'force)
