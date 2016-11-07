@@ -262,6 +262,7 @@ description to VAR in BODY."
   "Get the version of PACKAGE, as version list."
   (epl-package-as-description package
     (cond
+     ((fboundp 'package-desc-priority-version) (package-desc-priority-version package))
      ((fboundp 'package-desc-version) (package-desc-version package))
      ;; Legacy
      ((fboundp 'package-desc-vers)
