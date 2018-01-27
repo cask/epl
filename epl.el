@@ -630,7 +630,21 @@ packages."
 
 ;;; Package operations
 
-(defalias 'epl-install-file 'package-install-file)
+(defun epl-install-file (file)
+    "Install a package from FILE, like `package-install-file'."
+    (interactive (advice-eval-interactive-spec
+                  (cadr (interactive-form #'package-install-file))))
+    (apply #'package-install-file (list file))
+    (let ((package (epl-package-from-file file)))
+      (unless (epl-package--package-desc-p package)
+        (epl--kill-autoload-buffer package))))
+
+(defun epl--kill-autoload-buffer (package)
+  "Kill the buffer associated with autoloads for PACKAGE."
+  (let* ((auto-name (format "%s-autoloads.el" (epl-package-name package)))
+         (generated-autoload-file (expand-file-name auto-name (epl-package-directory package)))
+         (buf (find-buffer-visiting generated-autoload-file)))
+    (when buf (kill-buffer buf))))
 
 (defun epl-package-install (package &optional force)
   "Install a PACKAGE.
@@ -642,7 +656,8 @@ non-nil, install PACKAGE, even if it is already installed."
         (package-install (epl-package-description package))
       ;; The legacy API installs by name.  We have no control over versioning,
       ;; etc.
-      (package-install (epl-package-name package)))))
+      (package-install (epl-package-name package))
+      (epl--kill-autoload-buffer package))))
 
 (defun epl-package-delete (package)
   "Delete a PACKAGE.
